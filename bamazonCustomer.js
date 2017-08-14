@@ -51,17 +51,15 @@ function getItemInfo(){
             
             var selectedItem;
             var quantity;
-
-            for(i=0; i<res.length; i++){
+            //console.log(res);
+            for(var i=0; i<res.length; i++){
                 if(parseInt(answer.selectedId) === res[i].id){
-                   
                     selectedItem = res[i];
                     quantity = res[i].stock_quantity - answer.quantity;
                 }
                
-                updateDb(quantity, selectedItem.id);
             }
-                
+            updateDb(quantity, parseInt(selectedItem.id));
         });
 });
 }
@@ -78,6 +76,8 @@ function updateDb(quantity, selectedId){
             }
         ]
     )
+    console.log('your order has been placed');
+   
 }
 
    
