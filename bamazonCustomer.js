@@ -53,13 +53,41 @@ function getItemInfo(){
             var quantity;
             //console.log(res);
             for(var i=0; i<res.length; i++){
+
                 if(parseInt(answer.selectedId) === res[i].id){
                     selectedItem = res[i];
-                    quantity = res[i].stock_quantity - answer.quantity;
+                    if(selectedItem.stock_quantity < answer.quantity){
+                        
+                        inquirer.prompt({
+                        name: "revisePurchase",
+                        type: "confirm",
+                        message: "We do not have enough in stock, Would you like to revise your purchase?"
+                        }).then(function(answer){
+                            if(answer.revisePurchase === true){
+                                displayItems();
+                            }else{
+                                console.log('Thanks for shopping at Bamazon!');
+                            }
+                        });
+                }else{
+                    
+                quantity = res[i].stock_quantity - answer.quantity;
+                updateDb(quantity, selectedItem.id);
+                inquirer.prompt({
+                    name: "anotherPurchase",
+                    type: "confirm",
+                    message: "Would you like to make another purchase?"
+                }).then(function(answer){
+                    if(answer.anotherPurchase === true){
+                        displayItems();
+                    }else{
+                        console.log('Thanks for shopping at Bamazon!');
+                    }
+                })
                 }
-               
+                }    
             }
-            updateDb(quantity, parseInt(selectedItem.id));
+            
         });
 });
 }
