@@ -16,22 +16,18 @@ connection.connect(function(err) {
 });
 
 
-
 function displayItems(){
     connection.query("SELECT * FROM bamazon_DB.items", function(err, res){
         if (err) throw err;
         console.log('These are the items in our inventory');
 
         for(i=0; i<res.length; i++){
-            console.log(`${res[i].id} | ${res[i].product_name} | ${res[i].department_name} | ${res[i].price} | ${res[i].stock_quantity}`);
+            console.log(`${res[i].id} | ${res[i].product_name} | ${res[i].department_name} | $ ${res[i].price} | ${res[i].stock_quantity}`);
         }
         getItemInfo();
     })
     
 }
-
-
-
 
 function getItemInfo(){
         inquirer.prompt([
@@ -51,6 +47,7 @@ function getItemInfo(){
             
             var selectedItem;
             var quantity;
+            var totalCost;
             //console.log(res);
             for(var i=0; i<res.length; i++){
 
@@ -70,9 +67,12 @@ function getItemInfo(){
                             }
                         });
                 }else{
-                    
+
                 quantity = res[i].stock_quantity - answer.quantity;
-                updateDb(quantity, selectedItem.id);
+                totalCost = answer.quantity * parseInt(selectedItem.price);
+               
+                    updateDb(quantity, selectedItem.id, totalCost);
+               
                 inquirer.prompt({
                     name: "anotherPurchase",
                     type: "confirm",
@@ -92,7 +92,8 @@ function getItemInfo(){
 });
 }
 
-function updateDb(quantity, selectedId){
+function updateDb(quantity, selectedId, totalCost){
+
     connection.query(
         "UPDATE items SET ? WHERE ?",
         [
@@ -104,7 +105,7 @@ function updateDb(quantity, selectedId){
             }
         ]
     )
-    console.log('your order has been placed');
+    console.log(`your order has been placed. Your total cost is ${totalCost}`);
    
 }
 
