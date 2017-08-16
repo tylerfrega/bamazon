@@ -22,7 +22,7 @@ function displayItems(){
         console.log('These are the items in our inventory');
 
         for(i=0; i<res.length; i++){
-            console.log(`${res[i].id} | ${res[i].product_name} | ${res[i].department_name} | $ ${res[i].price} | ${res[i].stock_quantity}`);
+            console.log(`${res[i].id} | ${res[i].product_name} | ${res[i].department_name} | $${res[i].price} | ${res[i].stock_quantity}`);
         }
         getItemInfo();
     })
@@ -93,7 +93,6 @@ function getItemInfo(){
 }
 
 function updateDb(quantity, selectedId, totalCost){
-
     connection.query(
         "UPDATE items SET ? WHERE ?",
         [
@@ -105,8 +104,7 @@ function updateDb(quantity, selectedId, totalCost){
             }
         ]
     )
-    console.log(`your order has been placed. Your total cost is ${totalCost}`);
-   
+    console.log(`your order has been placed. Your total cost is $${totalCost}`);
 }
 
    

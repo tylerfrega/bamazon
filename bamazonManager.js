@@ -70,11 +70,12 @@ function viewLowInventory(){
             }
         }
     })
+    returnHome();
 }
 
 function addToInventory(){
+   
     displayItems();
-
     inquirer.prompt([
             {
             name: "selectedId",
@@ -101,6 +102,7 @@ function addToInventory(){
             }
 
             updateDb(quantity, selectedItem.id);
+            returnHome();
 
             })
         });
@@ -150,15 +152,37 @@ function addNewProduct(){
         message: "enter the number of items you would like to add"
          }
     ]).then(function(answer){
-        var sql = "INSERT INTO items(product_name, department_name, price, stock_quantity) VALUES(" + 
-            answer.productName +"," + answer.productDepartment + ","+ parseInt(answer.productPrice) + "," + parseInt(answer.productQuantity) + ");"
+        var sql = "INSERT INTO items(product_name, department_name, price, stock_quantity) VALUES ?"
+        var values = [
+            [
+            answer.productName,
+            answer.productDepartment,  
+            answer.productPrice,  
+            answer.productQuantity
+            ]
+        ];
        
-        connection.query(sql, function(err, res){
+        connection.query(sql, [values], function(err, res){
             if(err) throw err;
             console.log("Item added");
+            returnHome();
         }
-            
+
           
         )
+    })
+}
+
+function returnHome(){
+    inquirer.prompt({
+        name: 'return',
+        type: 'confirm',
+        message: 'would you like to return to the start page?'
+    }).then(function(answer){
+        if(answer.return === true){
+            startPage();
+        }else{
+            console.log('have a nice day');
+        }
     })
 }
